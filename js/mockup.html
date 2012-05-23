@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  	<title>Distributome.org</title>
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  	
+	<link type="text/css" href="mockup.css" rel="stylesheet" />
+	<script type="text/javascript" src="scripts/jquery.js"></script>
+	<script type="text/javascript" src="scripts/distributome.js"></script>
+	<script type="text/javascript" src="scripts/xml2json.js"></script>
+
+  	<script type="text/javascript" src="scripts/common.js"></script>
+
+	<script type="text/javascript" src="scripts/editor.js"></script>
+
+	
+
+	<script type="text/javascript" src="./scripts/splitter.js"></script>
+
+
+
+	<script type="text/javascript" src="./scripts/XMLWriter.js"></script>
+	
+	
+	<!--[if !IE7]>
+		<style type="text/css">
+			#wrap{ display:table; height: 100%}
+		</style>
+	<![endif]-->
+  	<script type = "text/javascript">
+  		//    Dropdown Menu   //
+  		$(document).ready(function(){
+  			$("ul.subnav").parent().append("<span></span>");
+  			$(".mainmenu li").hover(function(){
+  				$(this).find("ul.subnav").slideDown('fast').show();
+  				
+  				$(this).hover(function(){
+  				}, function(){
+  					$(this).find("ul.subnav").slideUp('slow');
+  				});
+  				
+  				}).hover(function() {
+  					$(this).addClass("subhover");
+  				}, function(){
+  					$(this).removeClass("subhover");
+  			});
+  			
+  		//    Sidebar    //  			
+  			$('.accordion:eq(0)> div').hide();
+	        $('.accordion:eq(0)> h3').click(function() {
+	        		var old=$('.active');
+	        		old.toggleClass('active');
+	        		old.next().slideToggle('fast');
+	        	    $(this).next().slideToggle('fast');
+	        	    $(this).toggleClass('active');
+	        });
+	        
+	        $("#popout").click(function() {
+	        	$('.sidebar').toggleClass('hidden');
+	        	$('.header').toggleClass('hidden');
+	        	$('#navigator').toggleClass('expanded');
+	        	if($('.sidebar').css('display')==='none'){
+	        		$("#popout").html('<img src="images/btn_popin.png" style="margin-right:15px"/>');
+	        	}
+	        	else{
+	        		$("#popout").html('<img src="images/btn_popout.png"/>');
+	        	}
+	        	
+	        });
+  		});
+  		
+
+  		// NAVIGATOR // 
+        var sc_project=5714596; 
+        var sc_invisible=1; 
+        var sc_partition=71; 
+        var sc_click_stat=1; 
+        var sc_security="038e9ac4"; 
+  		
+  	</script>
+  	
+    <!-- NAVIGATOR SCRIPT -->
+  	<script type="text/javascript+protovis">
+	function resetNavigator(){
+		resetView();
+		resetNodesEdges();
+		vis.render();
+	}
+	
+	function resetNodesEdges(){
+		resetNodes();
+		resetEdges();
+	}
+	
+	function resetNodes(){
+		var classes = pv.nodes(distributome.nodes);		
+		classes.slice(1).forEach(function(d) {
+			var i = 5;
+			d.nodeValue.selected = false;
+			d.nodeValue = d.nodeValue.value;
+			if (isNaN(d.x)) d.x = w / 2 + 40 * Math.random() - 20;
+	    	if (isNaN(d.y)) d.y = h / 2 + 40 * Math.random() - 20;
+		});
+	}
+	
+	function resetEdges(){
+		var classes = pv.nodes(distributome.edges);		
+		classes.slice(1).forEach(function(d) {
+			d.nodeValue.selected = false;
+		});
+	}
+		
+	function getSelectedNodes(){
+		var classes = pv.nodes(distributome.nodes);	
+		var selectedNodes = new Array();
+		classes.slice(1).forEach(function(d) {
+			if(d.nodeValue.selected == 'red'){
+				selectedNodes.push(getDistributionName(d.nodeValue.nodeName));
+			}
+		});
+		return selectedNodes;
+	}
+	
+	function graphPause(){
+		force.stop();
+	}
+	
+	function graphRestart(){
+		force.start();
+	}
+	
+	function resizeDistributome(){
+		force.nodes(distributome.nodes);
+		force.reset();
+		var leftPanelWidth = document.getElementById('LeftPanel').style.width;
+		var leftPanelHeight = document.getElementById('LeftPanel').style.height;
+		var w =	leftPanelWidth.substring(0,leftPanelWidth.indexOf('px')),
+			h = leftPanelHeight.substring(0,leftPanelHeight.indexOf('px'));
+		vis.width(w);
+		vis.height(h);
+		vis.render();
+		graphPause();
+	}
+    </script>
+</head>
+<body>
+	<div id="wrap">
+		<div class="header">
+			<ul class = "mainmenu">
+				<li class = "home"><a href="index.html">Distributome</a></li>
+				<li><a href="#"> DB Search </a>
+					<ul class="subnav">
+						<li></li>
+						<li></li>
+					</ul>
+				</li>
+				<li><a href="#">About</a>
+					<ul class="subnav">
+						<li><a href="#"> Distributome Project</a></li>
+						<li><a href="#"> Document Wiki</a></li>
+						<li><a href="#"> Documentation</a></li>
+					</ul>
+				</li>
+				<li><a href="#">Tech Docs</a>
+					<ul class="subnav">
+						<li></li>
+						<li></li>
+					</ul>
+				</li>
+				<li><a href="#">Navigator</a>
+					<ul class="subnav">
+						<li></li>
+						<li></li>
+					</ul>
+				</li>
+				<li><a href="#">Legacy Resources</a>
+					<ul class="subnav">
+						<li></li>
+						<li></li>
+					</ul>
+				</li>
+				<li><a href="#">Blog</a>
+				</li>
+			</ul>
+		</div>
+		<div class = "content">
+			<div id="LeftPanel">
+				<button id = "popout"><img src="images/btn_popout.png" /></button>
+				<script type="text/javascript+protovis">
+			/**	To Do: Make the height and width of the Graph panel 
+				auto-adjust to the "LeftPanel" panel size that the graph is embedded in!  
+			***/
+		try{
+		
+			var leftPanelWidth = document.getElementById('LeftPanel').style.width;
+			var leftPanelHeight = document.getElementById('LeftPanel').style.height;
+			var w =	leftPanelWidth.substring(0,leftPanelWidth.indexOf('px')),
+				h = leftPanelHeight.substring(0,leftPanelHeight.indexOf('px')),
+				colors = pv.Colors.category10();
+			
+			var vis = new pv.Panel()
+    			.width(w)
+    			.height(h)
+   				.fillStyle("white") //.fillStyle("rgb(240,240,240)")
+    			//.event("mousedown", pv.Behavior.pan().bound(true))
+				//.event("mousewheel", pv.Behavior.zoom().bound(true));
+				.event("mousedown", pv.Behavior.pan())
+    			.event("mousewheel", pv.Behavior.zoom());
+				
+				/*** To Do: Need to trigger a Split-Frame Resizing when the mouse-scroll
+					 zoom action is triggered. See the split-pane resizing functionality
+					 below ($("#MainSplitPaneObject").trigger("resize");). Something like:
+					 .event("mousewheel", graphZoomResizeFrame());
+				 	 Currently, the graph-zoom expands the frame, but leaves the split-pane
+					 size unchanged!
+				****/
+
+			force = vis.add(pv.Layout.Force)
+    			.nodes(distributome.nodes)
+    			.links(distributome.edges)
+				.springConstant(0.05)
+				.chargeConstant(-80)
+				.springLength(200)
+				.bound(true); 
+		
+			var linky = force.link.add(pv.Line)
+						.cursor("pointer")
+						//.fillStyle("#696969")
+						.strokeStyle(function(d,l) getLinkColor(d,l))
+						.event("click", function (d, l) { getRelationProperties(d.nodeName, l.index); setEditorNode(l.index, "link"); });
+			
+			linky.add(pv.Dot)
+				.data(function(l) { if(l.target == l.source) return [{x:0,y:0}];
+				nodecalc = Math.sqrt((l.targetNode.linkDegree*15)/Math.PI)*2; 
+				return [{ 
+					x: l.targetNode.x - nodecalc * Math.cos(Math.atan2(l.targetNode.y - l.sourceNode.y, l.targetNode.x - l.sourceNode.x)), 
+					y: l.targetNode.y - nodecalc * Math.sin(Math.atan2(l.targetNode.y - l.sourceNode.y, l.targetNode.x - l.sourceNode.x)) 
+				}];
+				}) 
+				.angle(function (n,l) Math.atan2(l.targetNode.y - l.sourceNode.y, l.targetNode.x - l.sourceNode.x) - Math.PI/2) 
+				.shape("triangle") 
+				.strokeStyle(function(d,l) getArrowColor(d,l))
+				.fillStyle(function(d,l) getArrowColor(d,l))
+				.size( function(d,l) getArrowSize(d,l))
+				.visible(true);
+
+
+	var dnodes = force.node.add(pv.Dot)
+				.bottom(0)
+				.size(function(d) { return d.selected?(d.linkDegree + 15) * Math.pow(this.scale, -1.5):(d.linkDegree + 4) * Math.pow(this.scale, -1.5)})
+				.fillStyle(function(d) getColor(d))
+				//.fillStyle(pv.hsl(225, 0.5, 0.5, 0.5))
+				.strokeStyle(function() this.fillStyle().darker())
+				.lineWidth(1)
+				//.title(function(d) d.nodeName)
+				.cursor("pointer")
+				.event("click", function (d) { getNodeProperties(this.index, d.nodeName, d); setEditorNode(this.index, "node"); })
+				.event("mousedown", pv.Behavior.drag())
+				.event("drag", force)
+				.anchor("center").add(pv.Label)
+				.text(function(d) getText(d) )
+				.font(function(d) d.selected?'bold 10pt sans-serif':'normal 7pt sans-serif');
+			
+			/*dnodes.add(pv.Color)
+				.color('#ddd')
+				.opacity(1);*/
+
+			vis.render();
+		}catch(e){
+		}
+		//setDropDownSelectedValue('distributome.connectedNodesAction', 1);
+		//connectedNodesFetch();
+		</script>
+			</div>
+			<div id="navsidebar" class="sidebar">
+				<div class = "accordion">
+					<h3>Editor</h3>
+					<div>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.
+					</div>
+					<h3>Editor</h3>
+					<div>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.
+					</div>
+					<h3>Editor</h3>
+					<div>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.
+					</div>
+					<h3>Distribution Properties</h3>
+					<div>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl erat, consequat non ultrices ut, pharetra vel lectus. Donec non felis diam, at tempus felis. Nulla et euismod felis. Sed ut suscipit eros.
+					</div>
+					<h3>Inter-Distribution Relations</h3>
+					<div> lalala </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<ul id="toolbar">
+			<li>
+			<input id="distributome.text" name="search" type="text" onKeydown="Javascript: if (event.keyCode==13) textSearch();" placeholder="Find distributions or relations"/>
+			</li>
+			<li>
+			<div class="styled">
+			<form action="NeughborAction">
+				<select name="Neighbors" id="distributome.neighborAction" onchange="neighborsFetch();">
+					<option value="neighbors">Neighbors</option>
+					<option value="parent">Parents</option>
+					<option value="children">Children</option>
+					<option value="parentchildren">Parents&Children</option>
+				</select>
+			</form>
+			</div>
+			</li>
+			<li>
+			<div class="styled">
+			<form action="NodeTypeAction">
+				<select name="NodeType" id="distributome.nodeTypeAction" onchange="nodeTypeInfoFetch();">
+					<option value="distributionType">Distribution Type</option>
+					<option value="convolution">Convolution</option>
+					<option value="memoryless">Memoryless</option>
+					<option value="inverse">Inverse</option>
+					<option value="linearCombination">Linear Combination</option>
+					<option value="maximum">Maximum</option>
+					<option value="minimum">Minimum</option>
+					<option value="discrete">Discrete</option>
+					<option value="continuous">Continuous</option>
+				</select>
+			</form>
+			</div>
+			</li>
+			<li>
+			<div class="styled">
+			<form action="EdgeTypeAction">
+				<!-- Get the type of an edge (relation) and highlight all edges of this type.
+					Note that all edges are directional!
+				-->
+				<select name="EdgeType" id="distributome.edgeTypeAction" onchange="edgeTypeInfoFetch();">
+					<option value="relationType">Relation Type</option>
+					<option value="special case">Special Case</option>
+					<option value="transform">Transform</option>
+					<option value="limiting">Limiting</option>
+					<option value="transformation">Transformation</option>
+					<option value="bayesian">Bayesian</option>
+				</select>
+			</form>
+			<div>
+			</li>
+			<li>
+			<div class="styled">
+			<form action="ConnectedNodesAction">
+				<select name="ConnectedNodes" id="distributome.connectedNodesAction" onchange="resetView();connectedNodesFetch();">
+					<option value="connectivity">Display Ontology</option>
+					<option value="mostConnected">Top Level</option>
+					<option value="connected">Middle Level</option>
+					<option value="sparselyConnected">All</option>
+				</select>
+			</form>
+			</div>
+			</li>
+			<li>
+				<button type="button" class="button" tabindex="4" title="Reset View" onclick="resetPage();">RESET</button>
+			</li>	
+			<li>
+				<button type="button" class="button" tabindex="4" title="Restart View" onclick="graphRestart();">RESTART</button>
+			</li>
+			<li>
+				<button type="button" class="button" tabindex="4" title="Pause View" onclick="graphPause();">PAUSE</button>
+			</li>
+		</ul>
+	</div>
+
+</body>
+</html>
