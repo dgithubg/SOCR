@@ -1,0 +1,41 @@
+2012-05-17 Angelina Huang <angelina.huang@ucla.edu>
+
+	* mockup.html (footer): added RESTART, RESET, PAUSE menu buttons
+	
+	*mockup.css (.button): styled Restart, Rese, Pause menu buttons. 
+	(#navsidebar): removed border on hover
+	
+2012-05-16 Angelina Huang <angelina.huang@ucla.edu>
+
+	* mockup.html (footer): added search box, Neighbors, Distribution Type, Relation Type, and Display Ontology menus
+	
+	* mockup.css (FOOTER CSS): styled search box and drop down boxes
+
+2012-05-10 Angelina Huang <angelina.huang@ucla.edu>
+
+	* mockup.html (<html>): create file
+	(.header) implemented drop down menu with dummy links
+	(#navigator) implemented popout content with dummy content
+	(#navsidebar) implemented accordion
+	
+	* mockup.css: create file, styled everything implemented in mockup.html
+	
+	
+2012-05-24 Angelina Huang <angelina.huang@ucla.edu>
+
+    *mockup.css (div.sidebar): added z-index
+    (#LeftPanel): removed static width/height, border
+    (#popout): commented out
+    (Navigator CSS): integrated inline css from edi.html
+    (.accordion): made background nontransparent
+    (.accordion h3): accordion header font smaller
+    (.accordion div): maxsize of accordion panel smaller
+    (.footer) added index, absolute positioning
+    (#distributome.\text) changed div name from #search
+    
+    *mockup.html (<script>): changed src for XMLWriter and Splitter from "./scripts" to "scripts"
+    (<script type="text/javascript"): in <head>, added dynamic sizing of navigator and footer
+    (Navigator): integrated Navigator code from edi.html; disabled pop out button
+    (Editor): Integrated Distribution properties, actions, and references code from edi.html into accordion panels; Editor panel not fully integrated ( node info is not displaying in Editor panel ONLY).
+    
+    *distributome.js : added comments to code, alerts for debugging
